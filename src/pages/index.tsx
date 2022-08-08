@@ -19,7 +19,14 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: "300px",
+        }}
+      >
         <input
           type="email"
           value={email}
