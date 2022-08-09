@@ -1,6 +1,8 @@
 import { createContext, useState } from "react";
-import { api } from "../services/api";
 import NextRouter from "next/router";
+import { setCookie } from "nookies";
+
+import { api } from "../services/api";
 
 type SignInCredentials = {
   email: string;
@@ -35,7 +37,16 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         email,
         password,
       });
-      const { toke, refreshToken, permissions, roles } = data;
+      const { token, refreshToken, permissions, roles } = data;
+
+      setCookie(undefined, "@nextauth.token", token, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: "/",
+      });
+      setCookie(undefined, "@nextauth.refreshToken", refreshToken, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: "/",
+      });
 
       setUser({
         email,
