@@ -6,7 +6,7 @@ const Dashboard = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    api.get("/me");
+    api.get("/me").then((res) => console.log(res));
   }, []);
 
   return <h1>Dashboard: {user?.email}</h1>;
