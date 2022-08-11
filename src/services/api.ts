@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
-import { parseCookies, setCookie } from "nookies";
+import NextRouter from "next/router";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { signOut } from "../context/AuthContext";
 
 interface AxiosErrorResponse {
   code?: string;
@@ -27,7 +29,6 @@ api.interceptors.response.use(
   },
   (error: AxiosError<AxiosErrorResponse>) => {
     // FIX: Vítor - Pensar em uma forma de diminuir a sequencia de ifs, talvez com return?
-    console.log(error);
     if (error.response?.status === 401) {
       if (error.response.data.code === "token.expired") {
         cookies = parseCookies();
@@ -43,7 +44,6 @@ api.interceptors.response.use(
               refreshToken,
             })
             .then((response) => {
-              console.log(response);
               const { token } = response.data;
 
               setCookie(undefined, "@nextauth.token", token, {
@@ -86,9 +86,10 @@ api.interceptors.response.use(
             },
           });
         });
+      } else {
+        signOut();
       }
-    } else {
-      // deslogar o usuário
     }
+    return Promise.reject(error);
   }
 );
