@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import NextRouter from "next/router";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 
-import { api } from "../services/api";
+import { api } from "../services/apiClient";
 
 type SignInCredentials = {
   email: string;
