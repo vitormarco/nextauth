@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies, setCookie } from "nookies";
 import { signOut } from "../context/AuthContext";
+import { AuthTokenError } from "./errors/AuthTokenError";
 
 interface AxiosErrorResponse {
   code?: string;
@@ -96,6 +97,7 @@ export function setupApiClient(
           });
         } else {
           if (process.browser) signOut();
+          return Promise.reject(new AuthTokenError());
         }
       }
       return Promise.reject(error);
