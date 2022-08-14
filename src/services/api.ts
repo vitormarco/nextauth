@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { GetServerSidePropsContext } from "next";
-import { parseCookies, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { signOut } from "../context/AuthContext";
 import { AuthTokenError } from "./errors/AuthTokenError";
 
@@ -96,7 +96,13 @@ export function setupApiClient(
             });
           });
         } else {
-          if (process.browser) signOut();
+          if (process.browser) {
+            signOut();
+          } else {
+            destroyCookie(ctx, "@nextauth.token");
+            destroyCookie(ctx, "@nextauth.refreshToken");
+          }
+
           return Promise.reject(new AuthTokenError());
         }
       }
